@@ -56,6 +56,7 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
     }
     
     this.updateMousePos(e);
+    this.emitItems([]);
   }
 
   private onMouseUp = () => {
@@ -110,18 +111,14 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
     const { active } = this.state;
     if (!active) return;
 
-    const { onSelect } = this.props;
-    const items: any = [];
+    const items: any[] = [];
 
     this.registry.forEach(item => {
       const collide = elementsCollide(item.ref, this.boxRef.current);
       if (collide) items.push(item.value);
     });
 
-    if (this.lastItemsCount !== items.length) {
-      onSelect(items);
-      this.lastItemsCount = items.length;
-    }
+    this.emitItems(items);
   }
 
   private registerItem = (item: RegistryItem) => {
@@ -130,6 +127,15 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
 
   private unregisterItem = (value: any) => {
     this.registry = this.registry.filter(r => r.value !== value);
+  }
+
+  private emitItems = (items: any[]) => {
+    const { onSelect } = this.props;
+
+    if (this.lastItemsCount !== items.length) {
+      onSelect(items);
+      this.lastItemsCount = items.length;
+    }
   }
 
   render() {
