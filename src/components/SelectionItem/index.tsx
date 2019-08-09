@@ -4,24 +4,27 @@ import { findDOMNode } from 'react-dom';
 import { RegistryItem } from '~/interfaces';
 
 interface Props {
+  selected?: boolean;
+}
+
+interface Registry {
   registerItem: (item: RegistryItem) => void;
   unregisterItem: (ref: HTMLElement) => void;
-  props: any;
 }
 
 interface State {
   selected: boolean;
 }
 
-export const createSelectable = (Component: any) => {
-  return class extends React.PureComponent<Props, State> {
+export function createSelectable<T>(Wrapped: React.ComponentType<any>): React.ComponentClass<T & Props> {
+  return class extends React.PureComponent<T & Props, State> {
     public state: State = {
       selected: false,
     };
 
     componentDidMount() {
       const ref = findDOMNode(this);
-      const { registerItem } = this.props;
+      const { registerItem } = this.props as unknown as Registry;
 
       registerItem({
         ref: ref as HTMLElement,
@@ -37,7 +40,7 @@ export const createSelectable = (Component: any) => {
       const { ...props } = this.props;
       const { selected } = this.state;
 
-      return <Component selected={selected} {...props} />
+      return <Wrapped selected={selected} {...props} />
     }
   }
 }
