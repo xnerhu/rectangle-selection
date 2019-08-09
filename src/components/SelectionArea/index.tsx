@@ -6,6 +6,7 @@ import './style.css';
 
 interface Props {
   children?: any;
+  onSelect?: (items: any) => void;
 }
 
 interface State {
@@ -13,7 +14,7 @@ interface State {
   visible?: boolean;
 }
 
-export class SelectionArea extends React.PureComponent<Props, State> {
+export class SelectionArea<T> extends React.PureComponent<Props, State> {
   public state: State = {
     active: false,
     visible: false,
@@ -97,30 +98,37 @@ export class SelectionArea extends React.PureComponent<Props, State> {
       left: `${left}px`,
     });
     
-    this.searchElements();
+    this.selectElements();
     this.setState({
       visible: cursorDistance(this.startPos, this.relMousePos) > 5,
     });
   }
 
-  private searchElements() {
+  private selectElements() {
     const { active } = this.state;
     if (!active) return;
 
-    this.registry.forEach(item => {
-      const collide = elementsCollide(item.ref, this.boxRef.current);
+    const { onSelect } = this.props;
+    const items: any = [];
 
-      item.onSelect(collide);
+    this.registry.forEach((item, index) => {
+      const collide = elementsCollide(item.ref, this.boxRef.current);
+      
+      if (collide) {
+        items.push(item.value);
+      }
     });
+
+    onSelect(items);
   }
 
   private registerItem = (item: RegistryItem) => {
     this.registry.push(item);
   }
 
-  private unregisterItem = () => {
+  // private unregisterItem = (item: RegistryItem) => {
 
-  }
+  // }
 
   render() {
     const { active, visible } = this.state;
@@ -135,11 +143,12 @@ export class SelectionArea extends React.PureComponent<Props, State> {
         <div ref={this.boxRef} className='rectangle-selection-box' style={boxStyle} />
         {React.Children.map(children, child => {
           return React.cloneElement(child, {
-            registerItem: this.registerItem,
-            unregisterItem: this.unregisterItem
+            registerItem: this.registerItem
           });
         })}
       </div>
     );
   }
 };
+
+//             unregisterItem: this.unregisterItem,
