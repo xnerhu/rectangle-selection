@@ -54,7 +54,7 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   }
 
   private onMouseUp = () => {
-    this.setState({ active: false });
+    this.setState({ active: false, visible: false });
     this.removeListeners();
   }
 
