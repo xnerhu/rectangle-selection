@@ -4,6 +4,8 @@
 
 An easy to use items selection.
 
+![](https://i.imgur.com/ElzvfC9.jpg)
+
 ## Installing
 
 ```bash

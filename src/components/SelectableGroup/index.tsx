@@ -50,8 +50,6 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
   private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const { onMouseDown } = this.props;
 
-    console.log('t');
-
     if (onMouseDown) {
       const cancel = onMouseDown(e);
       if (cancel) return;
