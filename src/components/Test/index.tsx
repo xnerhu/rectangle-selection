@@ -1,5 +1,7 @@
-import * as React from 'react';
+import * as React from 'react'
+
+import './style.css';
 
 export const Test = () => {
-  return (<div>Hello world!</div>);
+  return (<div className='test'>Hello world!</div>);
 }
