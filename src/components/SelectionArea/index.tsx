@@ -9,11 +9,13 @@ interface Props {
 }
 
 interface State {
+  active?: boolean;
   visible?: boolean;
 }
 
 export class SelectionArea extends React.PureComponent<Props, State> {
   public state: State = {
+    active: false,
     visible: false,
   }
 
@@ -30,43 +32,61 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   }
 
   private addListeners() {
-    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mousemove', this.updateMousePos);
     window.addEventListener('mouseup', this.onMouseUp);
   }
 
   private removeListeners() {
-    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mousemove', this.updateMousePos);
     window.removeEventListener('mouseup', this.onMouseUp);
   }
 
   private onMouseDown = (e: React.MouseEvent) => {
-    this.startPos = this.mousePos = {
-      top: e.pageY,
-      left: e.pageX
-    };
-
-    this.setState({ visible: true });
+    this.setState({ active: true, });
     this.addListeners();
 
-    this.updateBox();
-  }
-
-  private onMouseUp = () => {
-    this.setState({ visible: false });
-    this.removeListeners();
-  }
-
-  private onMouseMove = (e: MouseEvent) => {
-    this.mousePos = {
+    this.startPos = {
       top: e.pageY + this.ref.current.scrollTop,
       left: e.pageX + this.ref.current.scrollLeft,
     }
     
-    this.updateBox();
+    this.updateMousePos(e);
+  }
+
+  private onMouseUp = () => {
+    this.setState({ active: false });
+    this.removeListeners();
+  }
+
+  private updateMousePos = (e: MouseEvent | React.MouseEvent) => {
+    const { active } = this.state;
+
+    if (active) {    
+      this.mousePos = {
+        top: e.pageY,
+        left: e.pageX,
+      }
+
+      this.updateBox();
+    }
+  }
+
+  private get relMousePos() {
+    const { top, left } = this.mousePos;
+
+    return {
+      top: top + this.ref.current.scrollTop,
+      left: left + this.ref.current.scrollLeft,
+    }
+  }
+
+  private onScroll = (e: any) => {
+    const { active } = this.state;
+    if (active) this.updateBox();
   }
 
   private updateBox() {
-    const { width, height, top, left } = getBoxRect(this.ref.current, this.mousePos, this.startPos);
+    const { width, height, top, left } = getBoxRect(this.ref.current, this.relMousePos, this.startPos);
 
     setElementStyle(this.boxRef.current, {
       width: `${width}px`,
@@ -76,20 +96,20 @@ export class SelectionArea extends React.PureComponent<Props, State> {
     });
 
     this.setState({
-      visible: cursorDistance(this.startPos, this.mousePos) > 5,
+      visible: cursorDistance(this.startPos, this.relMousePos) > 5,
     });
   }
 
   render() {
-    const { visible } = this.state;
+    const { active, visible } = this.state;
     const { children } = this.props;
 
     const boxStyle = {
-      display: visible ? 'block' : 'none'
+      display: active && visible ? 'block' : 'none'
     }
 
     return (
-      <div ref={this.ref} className='rectangle-selection-area' onMouseDown={this.onMouseDown}>
+      <div ref={this.ref} className='rectangle-selection-area' onMouseDown={this.onMouseDown} onScroll={this.onScroll}>
         <div ref={this.boxRef} className='rectangle-selection-box' style={boxStyle} />
         {children}
       </div>
