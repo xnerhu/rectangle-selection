@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { setElementStyle } from '~/utils';
+import { setElementStyle, cursorDistance } from '~/utils';
 import { Pos } from '~/interfaces';
 import './style.css';
 
@@ -9,12 +9,12 @@ interface Props {
 }
 
 interface State {
-  activated?: boolean;
+  visible?: boolean;
 }
 
 export class SelectionArea extends React.PureComponent<Props, State> {
   public state: State = {
-    activated: false,
+    visible: false,
   }
 
   private ref = React.createRef<HTMLDivElement>();
@@ -40,19 +40,19 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   }
 
   private onMouseDown = (e: React.MouseEvent) => {
-    this.startPos = {
+    this.startPos = this.mousePos = {
       top: e.pageY,
       left: e.pageX
-    }
+    };
 
-    this.setState({ activated: true });
+    this.setState({ visible: true });
     this.addListeners();
 
     this.updateBox();
   }
 
   private onMouseUp = () => {
-    this.setState({ activated: false });
+    this.setState({ visible: false });
     this.removeListeners();
   }
 
@@ -66,22 +66,22 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   }
 
   private updateBox() {
-    const { activated } = this.state;
+    const { width, height } = this.size;
+    const rect = this.ref.current.getBoundingClientRect();
 
-    if (activated) {
-      const { width, height } = this.size;
-      const rect = this.ref.current.getBoundingClientRect();
-  
-      const top = this.mousePos.top < this.startPos.top ? (this.startPos.top - height) : this.startPos.top;
-      const left = this.mousePos.left < this.startPos.left ? (this.startPos.left - width) : this.startPos.left;
-  
-      setElementStyle(this.boxRef.current, {
-        width: `${width}px`,
-        height: `${height}px`,
-        top: `${top - rect.top}px`,
-        left: `${left - rect.left}px`,
-      });
-    }
+    const top = this.mousePos.top < this.startPos.top ? (this.startPos.top - height) : this.startPos.top;
+    const left = this.mousePos.left < this.startPos.left ? (this.startPos.left - width) : this.startPos.left;
+
+    setElementStyle(this.boxRef.current, {
+      width: `${width}px`,
+      height: `${height}px`,
+      top: `${top - rect.top}px`,
+      left: `${left - rect.left}px`,
+    });
+
+    this.setState({
+      visible: cursorDistance(this.startPos, this.mousePos) > 5,
+    });
   }
 
   public get size() {
@@ -92,11 +92,11 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { activated } = this.state;
+    const { visible } = this.state;
     const { children } = this.props;
 
     const boxStyle = {
-      display: activated ? 'block' : 'none'
+      display: visible ? 'block' : 'none'
     }
 
     return (
