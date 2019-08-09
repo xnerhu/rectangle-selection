@@ -22,6 +22,13 @@ export function createSelectable<T>(Wrapped: React.ComponentType<T>): React.Comp
       });
     }
 
+    componentWillUnmount() {
+      const { ...props } = this.props;
+      const { unregisterItem } = this.props as any;
+
+      unregisterItem(props.itemKey);
+    }
+
     render() {
       const { ...props } = this.props;
 

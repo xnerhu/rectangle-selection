@@ -113,7 +113,7 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
     const { onSelect } = this.props;
     const items: any = [];
 
-    this.registry.forEach((item, index) => {
+    this.registry.forEach(item => {
       const collide = elementsCollide(item.ref, this.boxRef.current);
       if (collide) items.push(item.value);
     });
@@ -128,9 +128,9 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
     this.registry.push(item);
   }
 
-  // private unregisterItem = (item: RegistryItem) => {
-
-  // }
+  private unregisterItem = (value: any) => {
+    this.registry = this.registry.filter(r => r.value !== value);
+  }
 
   render() {
     const { active, visible } = this.state;
@@ -145,12 +145,11 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
         <div ref={this.boxRef} className='rectangle-selection-box' style={boxStyle} />
         {React.Children.map(children, child => {
           return React.cloneElement(child, {
-            registerItem: this.registerItem
+            registerItem: this.registerItem,
+            unregisterItem: this.unregisterItem
           });
         })}
       </div>
     );
   }
 };
-
-//             unregisterItem: this.unregisterItem,
