@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "esModuleInterop": true,
+    "declaration": true,
+
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2016", "dom", "es5"],
+    "experimentalDecorators": true,
+
+    "sourceRoot": "./src",
+
+    "baseUrl": "./",
+
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  },
+  "exclude": ["node_modules/"],
+  "include": ["src/"]
+}
