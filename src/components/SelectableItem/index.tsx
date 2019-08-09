@@ -9,7 +9,7 @@ interface State {
   selected: boolean;
 }
 
-export function createSelectable<T>(Wrapped: React.ComponentType<T>): React.ComponentClass<T & Props> {
+export function selectableItem<T>(Wrapped: React.ComponentType<T>): React.ComponentClass<T & Props> {
   return class extends React.PureComponent<T & Props, State> {
     componentDidMount() {
       const ref = findDOMNode(this);

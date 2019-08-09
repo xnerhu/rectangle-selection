@@ -4,9 +4,10 @@ import { setElementStyle, cursorDistance, getBoxRect, elementsCollide } from '~/
 import { Pos, RegistryItem } from '~/interfaces';
 import './style.css';
 
-interface Props {
-  children?: any;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   onSelect?: (items: any) => void;
+  onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => boolean | void;
+  children?: any;
 }
 
 interface State {
@@ -46,7 +47,16 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
     window.removeEventListener('mouseup', this.onMouseUp);
   }
 
-  private onMouseDown = (e: React.MouseEvent) => {
+  private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { onMouseDown } = this.props;
+
+    console.log('t');
+
+    if (onMouseDown) {
+      const cancel = onMouseDown(e);
+      if (cancel) return;
+    }
+
     this.setState({ active: true, });
     this.addListeners();
 
@@ -86,8 +96,11 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
     }
   }
 
-  private onScroll = (e: any) => {
+  private onScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { onScroll } = this.props;
     const { active } = this.state;
+
+    if (onScroll) onScroll(e);
     if (active) this.resize();
   }
 
@@ -132,7 +145,7 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
   private emitItems = (items: any[]) => {
     const { onSelect } = this.props;
 
-    if (this.lastItemsCount !== items.length) {
+    if (onSelect && this.lastItemsCount !== items.length) {
       onSelect(items);
       this.lastItemsCount = items.length;
     }
@@ -140,14 +153,14 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
 
   render() {
     const { active, visible } = this.state;
-    const { children } = this.props;
+    const { style, children } = this.props;
 
     const boxStyle = {
       display: active && visible ? 'block' : 'none'
     }
 
     return (
-      <div ref={this.ref} className='selection-container' onMouseDown={this.onMouseDown} onScroll={this.onScroll}>
+      <div ref={this.ref} className='selection-container' onMouseDown={this.onMouseDown} onScroll={this.onScroll} style={style}>
         <div ref={this.boxRef} className='selection-rectangle' style={boxStyle} />
         {React.Children.map(children, child => {
           return React.cloneElement(child, {

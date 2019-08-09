@@ -1,4 +1,10 @@
 import { SelectableGroup } from './components/SelectableGroup';
-import { createSelectable } from './components/SelectableItem';
+import { selectableItem } from './components/SelectableItem';
+import { setElementStyle, cursorDistance } from './utils';
 
-export { SelectableGroup, createSelectable };
+export {
+  SelectableGroup,
+  selectableItem,
+  setElementStyle,
+  cursorDistance
+};
