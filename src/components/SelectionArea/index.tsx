@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { setElementStyle, cursorDistance } from '~/utils';
+import { setElementStyle, cursorDistance, getBoxRect } from '~/utils';
 import { Pos } from '~/interfaces';
 import './style.css';
 
@@ -66,29 +66,18 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   }
 
   private updateBox() {
-    const { width, height } = this.size;
-    const rect = this.ref.current.getBoundingClientRect();
-
-    const top = this.mousePos.top < this.startPos.top ? (this.startPos.top - height) : this.startPos.top;
-    const left = this.mousePos.left < this.startPos.left ? (this.startPos.left - width) : this.startPos.left;
+    const { width, height, top, left } = getBoxRect(this.ref.current, this.mousePos, this.startPos);
 
     setElementStyle(this.boxRef.current, {
       width: `${width}px`,
       height: `${height}px`,
-      top: `${top - rect.top}px`,
-      left: `${left - rect.left}px`,
+      top: `${top}px`,
+      left: `${left}px`,
     });
 
     this.setState({
       visible: cursorDistance(this.startPos, this.mousePos) > 5,
     });
-  }
-
-  public get size() {
-    const width = Math.abs(this.mousePos.left - this.startPos.left);
-    const height = Math.abs(this.mousePos.top - this.startPos.top);
-
-    return { width, height };
   }
 
   render() {
