@@ -1,4 +1,8 @@
-module.exports = {
+const { resolve } = require('path');
+
+const INCLUDE = resolve(__dirname, 'src');
+
+const config = {
   entry: './src/index.ts',
   output: {
     filename: 'index.js',
@@ -11,6 +15,9 @@ module.exports = {
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
+    alias: {
+      '~': INCLUDE,
+    },
   },
 
   module: {
@@ -30,3 +37,5 @@ module.exports = {
     react: 'react',
   },
 };
+
+module.exports = config;
