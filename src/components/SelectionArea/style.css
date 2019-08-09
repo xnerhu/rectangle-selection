@@ -1,12 +1,11 @@
-.rectangle-selection-area {
-  width: 100vw;
-  height: 100vh;
+.selection-container {
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
-  background-color: rgba(0, 0, 0, 0.04);
   position: relative;
 }
 
-.rectangle-selection-area > .rectangle-selection-box {
+.selection-container > .rectangle-selection-box {
   width: 100px;
   height: 100px;
   background-color: rgba(0, 0, 0, 0.08);

@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { setElementStyle, cursorDistance, getBoxRect } from '~/utils';
-import { Pos } from '~/interfaces';
+import { setElementStyle, cursorDistance, getBoxRect, elementsCollide } from '~/utils';
+import { Pos, RegistryItem } from '~/interfaces';
 import './style.css';
 
 interface Props {
@@ -26,6 +26,8 @@ export class SelectionArea extends React.PureComponent<Props, State> {
   private startPos: Pos;
 
   private mousePos: Pos;
+
+  private registry: RegistryItem[] = [];
 
   public componentWillUnmount() {
     this.removeListeners();
@@ -67,7 +69,7 @@ export class SelectionArea extends React.PureComponent<Props, State> {
         left: e.pageX,
       }
 
-      this.updateBox();
+      this.resize();
     }
   }
 
@@ -82,10 +84,10 @@ export class SelectionArea extends React.PureComponent<Props, State> {
 
   private onScroll = (e: any) => {
     const { active } = this.state;
-    if (active) this.updateBox();
+    if (active) this.resize();
   }
 
-  private updateBox() {
+  private resize() {
     const { width, height, top, left } = getBoxRect(this.ref.current, this.relMousePos, this.startPos);
 
     setElementStyle(this.boxRef.current, {
@@ -94,10 +96,30 @@ export class SelectionArea extends React.PureComponent<Props, State> {
       top: `${top}px`,
       left: `${left}px`,
     });
-
+    
+    this.searchElements();
     this.setState({
       visible: cursorDistance(this.startPos, this.relMousePos) > 5,
     });
+  }
+
+  private searchElements() {
+    const { active } = this.state;
+    if (!active) return;
+
+    this.registry.forEach(item => {
+      const collide = elementsCollide(item.ref, this.boxRef.current);
+
+      item.onSelect(collide);
+    });
+  }
+
+  private registerItem = (item: RegistryItem) => {
+    this.registry.push(item);
+  }
+
+  private unregisterItem = () => {
+
   }
 
   render() {
@@ -109,9 +131,14 @@ export class SelectionArea extends React.PureComponent<Props, State> {
     }
 
     return (
-      <div ref={this.ref} className='rectangle-selection-area' onMouseDown={this.onMouseDown} onScroll={this.onScroll}>
+      <div ref={this.ref} className='selection-container' onMouseDown={this.onMouseDown} onScroll={this.onScroll}>
         <div ref={this.boxRef} className='rectangle-selection-box' style={boxStyle} />
-        {children}
+        {React.Children.map(children, child => {
+          return React.cloneElement(child, {
+            registerItem: this.registerItem,
+            unregisterItem: this.unregisterItem
+          });
+        })}
       </div>
     );
   }
