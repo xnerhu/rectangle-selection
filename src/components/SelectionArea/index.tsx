@@ -30,6 +30,8 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
 
   private registry: RegistryItem[] = [];
 
+  private lastItemsCount = 0;
+
   public componentWillUnmount() {
     this.removeListeners();
   }
@@ -113,13 +115,13 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
 
     this.registry.forEach((item, index) => {
       const collide = elementsCollide(item.ref, this.boxRef.current);
-      
-      if (collide) {
-        items.push(item.value);
-      }
+      if (collide) items.push(item.value);
     });
 
-    onSelect(items);
+    if (this.lastItemsCount !== items.length) {
+      onSelect(items);
+      this.lastItemsCount = items.length;
+    }
   }
 
   private registerItem = (item: RegistryItem) => {
