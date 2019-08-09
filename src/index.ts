@@ -1,3 +1,3 @@
-import { Test } from './components/Test';
+import { SelectionArea } from './components/SelectionArea';
 
-export { Test };
+export { SelectionArea };
