@@ -1,4 +1,4 @@
-import { SelectionArea } from './components/SelectionArea';
-import { createSelectable } from './components/SelectionItem';
+import { SelectableGroup } from './components/SelectableGroup';
+import { createSelectable } from './components/SelectableItem';
 
-export { SelectionArea, createSelectable };
+export { SelectableGroup, createSelectable };

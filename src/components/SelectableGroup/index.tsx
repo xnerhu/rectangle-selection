@@ -14,7 +14,7 @@ interface State {
   visible?: boolean;
 }
 
-export class SelectionArea<T> extends React.PureComponent<Props, State> {
+export class SelectableGroup extends React.PureComponent<Props, State> {
   public state: State = {
     active: false,
     visible: false,
