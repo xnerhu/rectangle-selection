@@ -2,14 +2,16 @@
   width: 100vw;
   height: 100vh;
   overflow-y: auto;
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: rgba(0, 0, 0, 0.04);
   position: relative;
 }
 
 .rectangle-selection-area > .rectangle-selection-box {
   width: 100px;
   height: 100px;
-  background-color: #2196f3;
+  background-color: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   position: absolute;
   z-index: 1000;
+  box-sizing: border-box;
 }
