@@ -5,7 +5,7 @@
   position: relative;
 }
 
-.selection-container > .rectangle-selection-box {
+.selection-container > .selection-rectangle {
   width: 100px;
   height: 100px;
   background-color: rgba(0, 0, 0, 0.08);

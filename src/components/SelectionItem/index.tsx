@@ -13,26 +13,22 @@ export function createSelectable<T>(Wrapped: React.ComponentType<T>): React.Comp
   return class extends React.PureComponent<T & Props, State> {
     componentDidMount() {
       const ref = findDOMNode(this);
-      const { ...props } = this.props;
-      const { registerItem } = this.props as any;
+      const { registerItem, itemKey } = this.props as any;
 
       registerItem({
         ref: ref as HTMLElement,
-        value: props.itemKey,
+        value: itemKey,
       });
     }
 
     componentWillUnmount() {
-      const { ...props } = this.props;
-      const { unregisterItem } = this.props as any;
-
-      unregisterItem(props.itemKey);
+      const { itemKey, unregisterItem } = this.props as any;
+  
+      unregisterItem(itemKey);
     }
 
     render() {
-      const { ...props } = this.props;
-
-      return <Wrapped {...props} />
+      return <Wrapped {...this.props} />
     }
   }
 }

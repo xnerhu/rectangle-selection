@@ -142,7 +142,7 @@ export class SelectionArea<T> extends React.PureComponent<Props, State> {
 
     return (
       <div ref={this.ref} className='selection-container' onMouseDown={this.onMouseDown} onScroll={this.onScroll}>
-        <div ref={this.boxRef} className='rectangle-selection-box' style={boxStyle} />
+        <div ref={this.boxRef} className='selection-rectangle' style={boxStyle} />
         {React.Children.map(children, child => {
           return React.cloneElement(child, {
             registerItem: this.registerItem,
