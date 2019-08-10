@@ -64,7 +64,6 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
     }
     
     this.updateMousePos(e);
-    this.emitItems([]);
   }
 
   private onMouseUp = () => {
