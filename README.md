@@ -43,10 +43,17 @@ const Square = selectableItem<SquareProps>(SquareComponent); // HOC
 const App = () => {
   const [selectedList, setSelected] = React.useState<number[]>([]);
 
+  // Unselect items on background click
+  const onMouseDown = () => {
+    setSelected([]);
+  };
+
+  // Handle selection
   const onSelect = (items: number[]) => {
     setSelected(items);
   };
 
+  // Prevent from creating selection rectangle
   const onCardMouseDown = (id: number) => (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelected([id]);
