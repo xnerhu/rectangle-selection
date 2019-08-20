@@ -61,7 +61,6 @@ const App = () => {
 
   return (
     <div>
-      <GlobalStyle />
       <SelectableGroup onSelect={onSelect}>
         {list.map(item => {
           const selected = selectedList.indexOf(item) !== -1;
