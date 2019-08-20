@@ -4,12 +4,12 @@
 
 An easy to use items selection.
 
-![](https://i.imgur.com/ElzvfC9.jpg)
+![](https://qusly.app/public/screenshots/rectangle-selection.gif)
 
 ## Installing
 
 ```bash
-$ npm install rectangle-selection
+$ npm install rectangle-selection --save-dev
 ```
 
 ## Example
@@ -61,7 +61,6 @@ const App = () => {
 
   return (
     <div>
-      <GlobalStyle />
       <SelectableGroup onSelect={onSelect}>
         {list.map(item => {
           const selected = selectedList.indexOf(item) !== -1;
