@@ -62,7 +62,7 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
       top: e.pageY + this.ref.current.scrollTop,
       left: e.pageX + this.ref.current.scrollLeft,
     }
-    
+
     this.updateMousePos(e);
   }
 
@@ -74,7 +74,7 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
   private updateMousePos = (e: MouseEvent | React.MouseEvent) => {
     const { active } = this.state;
 
-    if (active) {    
+    if (active) {
       this.mousePos = {
         top: e.pageY,
         left: e.pageX,
@@ -110,7 +110,7 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
       top: `${top}px`,
       left: `${left}px`,
     });
-    
+
     this.selectElements();
     this.setState({
       visible: cursorDistance(this.startPos, this.relMousePos) > 5,
@@ -150,14 +150,14 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
 
   render() {
     const { active, visible } = this.state;
-    const { style, children } = this.props;
+    const { children } = this.props;
 
     const boxStyle = {
       display: active && visible ? 'block' : 'none'
     }
 
     return (
-      <div ref={this.ref} className='selection-container' onMouseDown={this.onMouseDown} onScroll={this.onScroll} style={style}>
+      <div ref={this.ref} className='selection-container' {...this.props} onMouseDown={this.onMouseDown} onScroll={this.onScroll}>
         <div ref={this.boxRef} className='selection-rectangle' style={boxStyle} />
         {React.Children.map(children, child => {
           return React.cloneElement(child, {
