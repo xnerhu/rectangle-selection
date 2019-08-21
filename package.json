@@ -1,6 +1,6 @@
 {
   "name": "rectangle-selection",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Rectangle selection without the pain!",
   "main": "build/index.js",
   "types": "build/index.d.ts",
