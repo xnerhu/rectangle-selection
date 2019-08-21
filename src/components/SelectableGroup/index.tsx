@@ -55,6 +55,8 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
       if (cancel) return;
     }
 
+    if (e.button !== 0) return;
+
     this.setState({ active: true, });
     this.addListeners();
 
