@@ -106,17 +106,19 @@ export class SelectableGroup extends React.PureComponent<Props, State> {
   private resize() {
     const { width, height, top, left } = getBoxRect(this.ref.current, this.relMousePos, this.startPos);
 
-    setElementStyle(this.boxRef.current, {
-      width: `${width}px`,
-      height: `${height}px`,
-      top: `${top}px`,
-      left: `${left}px`,
-    });
+    if (top + height <= this.ref.current.clientHeight) {
+      setElementStyle(this.boxRef.current, {
+        width: `${width}px`,
+        height: `${height}px`,
+        top: `${top}px`,
+        left: `${left}px`,
+      });
 
-    this.selectElements();
-    this.setState({
-      visible: cursorDistance(this.startPos, this.relMousePos) > 5,
-    });
+      this.selectElements();
+      this.setState({
+        visible: cursorDistance(this.startPos, this.relMousePos) > 5,
+      });
+    }
   }
 
   private selectElements() {
