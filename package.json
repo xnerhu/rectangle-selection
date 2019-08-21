@@ -19,7 +19,10 @@
     "control-buttons",
     "titlebar"
   ],
-  "author": "sentialx",
+  "author": {
+    "name": "Mikołaj Palkiewicz",
+    "email": "xnerhu@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/xnerhu/rectangle-selection/issues"
