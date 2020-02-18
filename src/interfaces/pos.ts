@@ -1,4 +1,1 @@
-export interface Pos {
-  top: number;
-  left: number;
-}
+export type IPos = [number, number];
