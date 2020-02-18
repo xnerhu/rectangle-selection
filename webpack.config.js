@@ -35,6 +35,7 @@ const config = {
 
   externals: {
     react: 'react',
+    'react-dom': 'react-dom',
   },
 };
 
