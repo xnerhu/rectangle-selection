@@ -1,7 +1,7 @@
 {
   "name": "rectangle-selection",
-  "version": "1.0.3",
-  "description": "Rectangle selection without the pain!",
+  "version": "2.0.0",
+  "description": "Rectangle selection for React",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
@@ -28,27 +28,25 @@
     "url": "https://github.com/xnerhu/rectangle-selection/issues"
   },
   "homepage": "https://github.com/xnerhu/rectangle-selection#readme",
-  "devDependencies": {
-    "@types/react": "^16.9.0",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "awesome-typescript-loader": "^5.2.1",
-    "css-loader": "^3.2.0",
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-react": "^7.14.3",
-    "react": "^16.9.0",
-    "style-loader": "^1.0.0",
-    "typescript": "^3.5.3",
-    "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6"
-  },
   "files": [
     "build"
   ],
-  "dependencies": {
-    "@types/react-dom": "^16.8.5",
-    "react-dom": "^16.9.0"
+  "devDependencies": {
+    "@types/react": "^16.9.20",
+    "@types/react-dom": "^16.9.5",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  },
+  "peerDependencies": {
+    "react-dom": "^16.12.0",
+    "react": "^16.12.0"
   }
 }

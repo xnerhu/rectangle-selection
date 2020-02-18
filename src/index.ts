@@ -1,12 +1,4 @@
-import { SelectableGroup } from './components/SelectableGroup';
-import { selectableItem } from './components/SelectableItem';
-import { setElementStyle, cursorDistance } from './utils';
-import { Pos } from './interfaces/';
-
-export {
-  SelectableGroup,
-  selectableItem,
-  setElementStyle,
-  cursorDistance,
-  Pos,
-};
+export { SelectionArea } from './components/SelectionArea';
+export { Selectable } from './components/Selectable';
+export { cursorDistance, getScrollMousePos, getRelPos } from './utils';
+export { IPos } from './interfaces';

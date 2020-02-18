@@ -26,15 +26,12 @@ const config = {
         test: /\.(tsx|ts)$/i,
         loader: 'awesome-typescript-loader',
       },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
     ],
   },
 
   externals: {
     react: 'react',
+    'react-dom': 'react-dom',
   },
 };
 
