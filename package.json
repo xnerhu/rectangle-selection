@@ -1,7 +1,7 @@
 {
   "name": "rectangle-selection",
-  "version": "1.0.3",
-  "description": "Rectangle selection without the pain!",
+  "version": "2.0.0",
+  "description": "Rectangle selection for React",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
