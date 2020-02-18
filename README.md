@@ -15,6 +15,9 @@ $ npm install rectangle-selection --save-dev
 ## Example
 
 ```tsx
+import React from 'react';
+import { SelectionArea, Selectable } from 'rectangle-selection';
+
 const App = () => {
   const items = React.useRef(Array.from(Array(10).keys()));
 
