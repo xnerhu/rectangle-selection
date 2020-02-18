@@ -1,11 +1,10 @@
 import React, {
-  useState,
   useRef,
   useCallback,
   useMemo,
-  useEffect,
   CSSProperties,
   ReactNode,
+  useLayoutEffect,
 } from 'react';
 
 import { IPos, IContext } from '~/interfaces';
@@ -32,7 +31,7 @@ export const SelectionArea = ({
   children,
   ...props
 }: Props) => {
-  const [active, setActive] = useState(false);
+  const active = React.useRef(false);
 
   const ref = useRef<HTMLDivElement>();
   const boxRef = useRef<HTMLDivElement>();
@@ -49,28 +48,33 @@ export const SelectionArea = ({
   );
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
-    setActive(true);
+    if (!active.current && e.button === 0) {
+      window.addEventListener('mousemove', onWindowMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
 
-    startPos.current = getScrollMousePos(e, ref.current);
-
-    window.addEventListener('mousemove', onWindowMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+      startPos.current = getScrollMousePos(e, ref.current);
+      active.current = true;
+    }
   }, []);
 
   const onMouseUp = useCallback(() => {
-    window.removeEventListener('mousemove', onWindowMouseMove);
-    window.removeEventListener('mouseup', onMouseUp);
+    if (active.current) {
+      window.removeEventListener('mousemove', onWindowMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
 
-    startPos.current = null;
-    mousePos.current = null;
-    boxVisible.current = false;
+      startPos.current = null;
+      mousePos.current = null;
+      boxVisible.current = false;
+      active.current = false;
 
-    toggleBox(boxRef.current);
-    setActive(false);
+      toggleBox(boxRef.current);
+    }
   }, []);
 
   const onWindowMouseMove = useCallback(
     (e: MouseEvent) => {
+      if (!active.current) return;
+
       mousePos.current = [e.pageX, e.pageY];
 
       if (!boxVisible.current) {
@@ -94,9 +98,9 @@ export const SelectionArea = ({
   );
 
   const onScroll = useCallback(() => {
-    if (!active) return;
+    if (!active.current) return;
     resize();
-  }, [active]);
+  }, []);
 
   const resize = useCallback(() => {
     updateBoxRect(
@@ -113,12 +117,12 @@ export const SelectionArea = ({
     }
   }, [onSelection]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
       window.removeEventListener('mousemove', onWindowMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
-  }, []);
+  }, [distance]);
 
   const _style = React.useMemo<CSSProperties>(() => {
     return {
@@ -133,7 +137,7 @@ export const SelectionArea = ({
       boxSizing: 'border-box',
       backgroundColor: 'rgba(0, 0, 0, 0.08)',
       border: '1px solid rgba(0, 0, 0, 0.12)',
-      pointerEvents: 'none',
+      display: 'none',
       ...boxStyle,
     };
   }, [boxStyle]);
@@ -149,7 +153,7 @@ export const SelectionArea = ({
       <SelectionContext.Provider value={provider}>
         {children}
       </SelectionContext.Provider>
-      {active && <div ref={boxRef} style={_boxStyle} />}
+      <div ref={boxRef} style={_boxStyle} />
     </div>
   );
 };
