@@ -28,6 +28,8 @@ export const SelectionArea = ({
   onSelection,
   boxStyle,
   style,
+  onMouseDown,
+  onScroll,
   children,
   ...props
 }: Props) => {
@@ -47,7 +49,11 @@ export const SelectionArea = ({
     [],
   );
 
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
+  const _onMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (onMouseDown) {
+      onMouseDown(e);
+    }
+
     if (!active.current && e.button === 0) {
       window.addEventListener('mousemove', onWindowMouseMove);
       window.addEventListener('mouseup', onMouseUp);
@@ -97,7 +103,9 @@ export const SelectionArea = ({
     [distance],
   );
 
-  const onScroll = useCallback(() => {
+  const _onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    if (onScroll) onScroll(e);
+
     if (!active.current) return;
     resize();
   }, []);
@@ -147,8 +155,8 @@ export const SelectionArea = ({
       ref={ref}
       {...props}
       style={_style}
-      onMouseDown={onMouseDown}
-      onScroll={onScroll}
+      onMouseDown={_onMouseDown}
+      onScroll={_onScroll}
     >
       <SelectionContext.Provider value={provider}>
         {children}
