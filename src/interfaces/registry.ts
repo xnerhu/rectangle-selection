@@ -3,7 +3,8 @@ export interface IRegistryMap {
 }
 
 export interface IRegistryItem {
-  ref: React.RefObject<any>;
+  rect: DOMRect;
+  ref?: React.RefObject<HTMLDivElement>;
   id: number;
   data?: any;
 }

@@ -12,20 +12,25 @@ let _id = 0;
 export const Selectable = (props: Props) => {
   const { registry } = useContext(SelectionContext);
 
+  const ref = useRef<HTMLDivElement>();
   const id = useRef(_id++);
-  const ref = useRef<any>();
 
-  const setRef = useCallback((el: HTMLElement) => {
+  const setRef = useCallback((el: any) => {
     ref.current = el;
   }, []);
 
   useLayoutEffect(() => {
-    registry.register({ id: id.current, data: props.data, ref });
+    registry.register({
+      id: id.current,
+      data: props.data,
+      rect: ref.current.getBoundingClientRect(),
+      // ref,
+    });
 
     return () => {
       registry.unregister(id.current);
     };
-  }, [registry]);
+  }, [registry, props]);
 
   return props.children(setRef);
 };

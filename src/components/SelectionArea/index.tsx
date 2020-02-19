@@ -7,7 +7,7 @@ import React, {
   useLayoutEffect,
 } from 'react';
 
-import { IPos, IContext } from '~/interfaces';
+import { IPos, IContext, IOnSelection } from '~/interfaces';
 import { Registry, SelectionContext } from '~/models';
 import {
   getScrollMousePos,
@@ -17,7 +17,7 @@ import {
 } from '~/utils';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  onSelection?: (items: any[]) => void;
+  onSelection?: IOnSelection;
   distance?: number;
   boxStyle?: CSSProperties;
   children?: ReactNode;
@@ -44,9 +44,9 @@ export const SelectionArea = ({
 
   const provider = useMemo<IContext>(
     () => ({
-      registry: new Registry(boxRef),
+      registry: new Registry(boxRef, onSelection),
     }),
-    [],
+    [onSelection],
   );
 
   const _onMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -118,9 +118,7 @@ export const SelectionArea = ({
       startPos.current,
     );
 
-    const selected = provider.registry.getSelected();
-
-    onSelection(selected);
+    provider.registry.getSelected();
   }, [onSelection]);
 
   useLayoutEffect(() => {

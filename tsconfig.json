@@ -6,26 +6,23 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-
-    "esModuleInterop": true,
-    "declaration": true,
-
-    "module": "commonjs",
-    "target": "esnext",
-    "jsx": "react",
-    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
+
+    "module": "ES6",
+    "target": "es6",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
     "lib": ["dom", "esnext"],
     "experimentalDecorators": true,
-
-    "sourceRoot": "./src",
 
     "baseUrl": "./",
 
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     }
   },
   "include": ["./src"],
-  "exclude": ["./node_modules"]
+  "exclude": ["./node_modules", "./scripts"]
 }
