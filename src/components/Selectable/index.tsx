@@ -23,8 +23,7 @@ export const Selectable = (props: Props) => {
     registry.register({
       id: id.current,
       data: props.data,
-      rect: ref.current.getBoundingClientRect(),
-      // ref,
+      ref,
     });
 
     return () => {

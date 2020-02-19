@@ -1,10 +1,11 @@
-export interface IRegistryMap {
-  [key: number]: IRegistryItem;
-}
+import { ISelectionMode } from './selection';
 
 export interface IRegistryItem {
-  rect: DOMRect;
-  ref?: React.RefObject<HTMLDivElement>;
+  ref: React.RefObject<HTMLDivElement>;
   id: number;
   data?: any;
+}
+
+export interface IRegisterOptions {
+  mode?: ISelectionMode;
 }

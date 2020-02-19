@@ -4,3 +4,5 @@ export interface ISelectionItem {
 }
 
 export type IOnSelection = (items: any[]) => void;
+
+export type ISelectionMode = 'normal' | 'fast';

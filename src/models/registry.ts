@@ -1,58 +1,58 @@
-import {
-  IRegistryMap,
-  IRegistryItem,
-  IOnSelection,
-  ISelectionWorkerReq,
-  ISelectionWorkerRes,
-} from '~/interfaces';
-// import { elementsCollide } from '~/utils';
-
-import Worker from 'workerize-loader?inline!../workers/selection';
+import { IRegistryItem, IOnSelection, IRegisterOptions } from '~/interfaces';
 import { elementsCollide } from '~/utils';
 
 export class Registry {
-  public items: IRegistryMap = {};
+  public map = new Map<number, IRegistryItem>();
 
   protected worker: Worker;
 
+  protected lastSelected: any[] = [];
+
+  protected timeout: NodeJS.Timeout;
+
   constructor(
     public boxRef: React.RefObject<HTMLDivElement>,
-    protected onSelection: IOnSelection,
+    public onSelection: IOnSelection,
+    public options: IRegisterOptions = { mode: 'fast' },
   ) {}
 
   public register(item: IRegistryItem) {
-    this.items[item.id] = item;
+    this.map.set(item.id, item);
   }
 
   public unregister(id: number) {
-    delete this.items[id];
+    this.map.delete(id);
   }
 
-  protected onWorkerMessage = (e: MessageEvent) => {
-    const data: ISelectionWorkerRes = e.data;
+  protected search = () => {
+    const boxRect = this.boxRef.current.getBoundingClientRect();
 
-    if (data.type === 'response') {
-      this.onSelection(data.selected);
+    const selected: any[] = [];
+
+    this.map.forEach((r: IRegistryItem) => {
+      const collides = elementsCollide(
+        r.ref.current.getBoundingClientRect(),
+        boxRect,
+      );
+
+      if (collides) {
+        selected.push(r.data);
+      }
+    });
+
+    if (selected.length !== this.lastSelected.length && this.onSelection) {
+      this.onSelection(selected);
     }
+
+    this.lastSelected = selected;
   };
 
-  protected createWorker() {
-    if (this.worker) {
-      // this.worker.terminate();
-      return null;
-    }
-
-    this.worker = new Worker();
-    this.worker.addEventListener('message', this.onWorkerMessage);
-  }
-
   public getSelected() {
-    this.createWorker();
-
-    this.worker.postMessage({
-      type: 'request',
-      map: this.items,
-      boxRect: this.boxRef.current.getBoundingClientRect(),
-    } as ISelectionWorkerReq);
+    if (this.options.mode === 'fast') {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(this.search, 1);
+    } else {
+      this.search();
+    }
   }
 }

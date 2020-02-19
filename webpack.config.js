@@ -12,8 +12,6 @@ const config = {
     path: resolve(__dirname, 'build'),
     library: '',
     libraryTarget: 'commonjs',
-    publicPath: 'build/',
-    globalObject: 'this',
   },
 
   devtool: 'source-map',
