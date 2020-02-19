@@ -1,10 +1,8 @@
 import { IRegistryMap, IRegistryItem } from '~/interfaces';
-import { elementsCollide, arraysEqual } from '~/utils';
+import { elementsCollide } from '~/utils';
 
 export class Registry {
   public items: IRegistryMap = {};
-
-  protected lastSelected: any[];
 
   constructor(public boxRef: React.RefObject<any>) {}
 
@@ -17,18 +15,8 @@ export class Registry {
   }
 
   public getSelected() {
-    const selected = Object.values(this.items).filter(r => {
+    return Object.values(this.items).filter(r => {
       return elementsCollide(r.ref.current, this.boxRef.current);
     });
-
-    const same = arraysEqual(selected, this.lastSelected);
-
-    if (!same) {
-      this.lastSelected = selected;
-
-      return selected.map(r => r.data);
-    }
-
-    return false;
   }
 }

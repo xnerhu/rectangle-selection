@@ -120,9 +120,7 @@ export const SelectionArea = ({
 
     const selected = provider.registry.getSelected();
 
-    if (selected !== false) {
-      onSelection(selected);
-    }
+    onSelection(selected);
   }, [onSelection]);
 
   useLayoutEffect(() => {
