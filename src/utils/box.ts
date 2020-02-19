@@ -55,7 +55,7 @@ export const updateBoxRect = (
   rawMousePos: IPos,
   startPos: IPos,
 ) => {
-  if (!startPos) return;
+  if (!rawMousePos || !startPos) return;
 
   const mousePos = getRelPos(rawMousePos, ref);
 

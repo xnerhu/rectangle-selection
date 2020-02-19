@@ -62,6 +62,11 @@ export const SelectionArea = ({
         onMouseDown(e);
       }
 
+      // handle scrollbar
+      if (e.pageX + ref.current.scrollLeft >= ref.current.scrollWidth) {
+        return;
+      }
+
       if (!active.current && e.button === 0) {
         window.addEventListener('mousemove', onWindowMouseMove);
         window.addEventListener('mouseup', onMouseUp);
