@@ -1,22 +1,63 @@
-import { IRegistryMap, IRegistryItem } from '~/interfaces';
+import { IRegistryItem, IOnSelection, IRegisterOptions } from '~/interfaces';
 import { elementsCollide } from '~/utils';
 
 export class Registry {
-  public items: IRegistryMap = {};
+  public map = new Map<number, IRegistryItem>();
 
-  constructor(public boxRef: React.RefObject<any>) {}
+  protected worker: Worker;
+
+  protected lastSelected: any[] = [];
+
+  protected timeout: NodeJS.Timeout;
+
+  constructor(
+    public boxRef: React.RefObject<HTMLDivElement>,
+    public onSelection: IOnSelection,
+    public options: IRegisterOptions = {},
+  ) {}
 
   public register(item: IRegistryItem) {
-    this.items[item.id] = item;
+    this.map.set(item.id, item);
   }
 
   public unregister(id: number) {
-    delete this.items[id];
+    this.map.delete(id);
   }
 
-  public getSelected() {
-    return Object.values(this.items).filter(r => {
-      return elementsCollide(r.ref.current, this.boxRef.current);
+  protected search = () => {
+    const boxRect = this.boxRef.current.getBoundingClientRect();
+
+    const selected: any[] = [];
+
+    this.map.forEach((r: IRegistryItem) => {
+      const collides = elementsCollide(
+        r.ref.current.getBoundingClientRect(),
+        boxRect,
+      );
+
+      if (collides) {
+        selected.push(r.data);
+      }
     });
+
+    if (selected.length !== this.lastSelected.length && this.onSelection) {
+      this.onSelection(selected);
+    }
+
+    this.lastSelected = selected;
+  };
+
+  public getSelected(force?: boolean) {
+    const { fast } = this.options;
+
+    if (fast || force) {
+      clearTimeout(this.timeout);
+    }
+
+    if (this.options.fast && !force) {
+      this.timeout = setTimeout(this.search, 1);
+    } else {
+      this.search();
+    }
   }
 }

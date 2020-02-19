@@ -1,9 +1,9 @@
-export interface IRegistryMap {
-  [key: number]: IRegistryItem;
-}
-
 export interface IRegistryItem {
-  ref: React.RefObject<any>;
+  ref: React.RefObject<HTMLDivElement>;
   id: number;
   data?: any;
+}
+
+export interface IRegisterOptions {
+  fast?: boolean;
 }

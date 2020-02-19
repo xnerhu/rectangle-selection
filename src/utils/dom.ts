@@ -1,11 +1,8 @@
-export const elementsCollide = (first: HTMLElement, second: HTMLElement) => {
-  const rect1 = first.getBoundingClientRect();
-  const rect2 = second.getBoundingClientRect();
-
+export const elementsCollide = (first: DOMRect, second: DOMRect) => {
   return !(
-    rect1.right < rect2.left ||
-    rect1.left > rect2.right ||
-    rect1.bottom < rect2.top ||
-    rect1.top > rect2.bottom
+    first.right < second.left ||
+    first.left > second.right ||
+    first.bottom < second.top ||
+    first.top > second.bottom
   );
 };
