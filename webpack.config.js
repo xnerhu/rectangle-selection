@@ -3,12 +3,10 @@ const { resolve } = require('path');
 const INCLUDE = resolve(__dirname, 'src');
 
 const config = {
-  entry: {
-    main: './src/index.ts',
-  },
+  entry: './src/index.ts',
 
   output: {
-    filename: '[name].js',
+    filename: 'index.js',
     path: resolve(__dirname, 'build'),
     library: '',
     libraryTarget: 'commonjs',

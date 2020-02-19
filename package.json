@@ -2,11 +2,12 @@
   "name": "rectangle-selection",
   "version": "2.1.0",
   "description": "Rectangle selection for React",
-  "main": "build/main.js",
-  "types": "build/main.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "dev": "webpack-cli --mode development  --watch",
-    "build": "webpack-cli --mode production",
+    "build": "concurrently \"webpack-cli --mode production\" \"npm run generate-types\"",
+    "generate-types": "tsc --emitDeclarationOnly",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -34,9 +35,6 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-transform-async-to-generator": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
     "@babel/preset-react": "^7.8.3",
@@ -49,6 +47,7 @@
     "@typescript-eslint/parser": "^2.20.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
+    "concurrently": "^5.1.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",

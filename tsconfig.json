@@ -8,6 +8,8 @@
     "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
 
+    "declaration": true,
+
     "module": "ES6",
     "target": "es6",
     "jsx": "react",
@@ -15,7 +17,6 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "lib": ["dom", "esnext"],
-    "experimentalDecorators": true,
 
     "baseUrl": "./",
 
