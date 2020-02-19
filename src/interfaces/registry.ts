@@ -1,5 +1,3 @@
-import { ISelectionMode } from './selection';
-
 export interface IRegistryItem {
   ref: React.RefObject<HTMLDivElement>;
   id: number;
@@ -7,5 +5,5 @@ export interface IRegistryItem {
 }
 
 export interface IRegisterOptions {
-  mode?: ISelectionMode;
+  fast?: boolean;
 }

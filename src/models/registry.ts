@@ -13,7 +13,7 @@ export class Registry {
   constructor(
     public boxRef: React.RefObject<HTMLDivElement>,
     public onSelection: IOnSelection,
-    public options: IRegisterOptions = { mode: 'fast' },
+    public options: IRegisterOptions = {},
   ) {}
 
   public register(item: IRegistryItem) {
@@ -47,9 +47,14 @@ export class Registry {
     this.lastSelected = selected;
   };
 
-  public getSelected() {
-    if (this.options.mode === 'fast') {
+  public getSelected(force?: boolean) {
+    const { fast } = this.options;
+
+    if (fast || force) {
       clearTimeout(this.timeout);
+    }
+
+    if (this.options.fast && !force) {
       this.timeout = setTimeout(this.search, 1);
     } else {
       this.search();
