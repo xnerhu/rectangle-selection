@@ -1,6 +1,6 @@
 {
   "name": "rectangle-selection",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Rectangle selection for React",
   "main": "build/index.js",
   "types": "build/index.d.ts",
