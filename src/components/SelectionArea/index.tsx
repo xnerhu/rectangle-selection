@@ -162,8 +162,7 @@ export const SelectionArea = ({
 
   useLayoutEffect(() => {
     return () => {
-      window.removeEventListener('mousemove', onWindowMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      onMouseUp();
     };
   }, [fast]);
 

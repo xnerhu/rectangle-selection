@@ -3,4 +3,8 @@ export interface ISelectionItem {
   data: any;
 }
 
-export type IOnSelection = (items: any[]) => void;
+export type IOnSelection = (
+  items: any[],
+  selectedRefs: React.RefObject<HTMLDivElement>[],
+  lastRefs: React.RefObject<HTMLDivElement>[],
+) => void;

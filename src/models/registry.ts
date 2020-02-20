@@ -10,6 +10,8 @@ export class Registry {
 
   protected timeout: NodeJS.Timeout;
 
+  protected lastRefs: React.RefObject<any>[] = [];
+
   constructor(
     public boxRef: React.RefObject<HTMLDivElement>,
     public onSelection: IOnSelection,
@@ -28,6 +30,7 @@ export class Registry {
     const boxRect = this.boxRef.current.getBoundingClientRect();
 
     const selected: any[] = [];
+    const refs: React.RefObject<any>[] = [];
 
     this.map.forEach((r: IRegistryItem) => {
       const collides = elementsCollide(
@@ -37,14 +40,16 @@ export class Registry {
 
       if (collides) {
         selected.push(r.data);
+        refs.push(r.ref);
       }
     });
 
     if (selected.length !== this.lastSelected.length && this.onSelection) {
-      this.onSelection(selected);
-    }
+      this.onSelection(selected, refs, this.lastRefs);
 
-    this.lastSelected = selected;
+      this.lastSelected = selected;
+      this.lastRefs = refs;
+    }
   };
 
   public getSelected(force?: boolean) {
