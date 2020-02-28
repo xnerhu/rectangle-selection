@@ -15,6 +15,7 @@ import {
   toggleBox,
   isBoxVisible,
   updateBoxRect,
+  isScrollbar,
 } from '~/utils';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -59,21 +60,9 @@ export const SelectionArea = ({
 
   const _onMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (onMouseDown) {
-        onMouseDown(e);
-      }
+      if (onMouseDown) onMouseDown(e);
 
-      const rect = ref.current.getBoundingClientRect();
-
-      // handle scrollbar
-      if (
-        e.pageX + ref.current.scrollLeft - rect.left >=
-        ref.current.scrollWidth
-      ) {
-        return;
-      }
-
-      if (!active.current && e.button === 0) {
+      if (!active.current && e.button === 0 && !isScrollbar(ref.current, e)) {
         window.addEventListener('mousemove', onWindowMouseMove);
         window.addEventListener('mouseup', onMouseUp);
 
