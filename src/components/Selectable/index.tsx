@@ -1,4 +1,10 @@
-import React, { useContext, useRef, useCallback, useLayoutEffect } from 'react';
+import React, {
+  useContext,
+  useRef,
+  useCallback,
+  useLayoutEffect,
+  useEffect,
+} from 'react';
 
 import { SelectionContext } from '~/models';
 
@@ -19,7 +25,7 @@ export const Selectable = (props: Props) => {
     ref.current = el;
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     registry.register({
       id: id.current,
       data: props.data,

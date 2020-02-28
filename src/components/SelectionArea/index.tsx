@@ -9,6 +9,7 @@ import React, {
 
 import { IPos, IContext, IOnSelection } from '~/interfaces';
 import { Registry, SelectionContext } from '~/models';
+import { Box } from '../Box';
 import {
   getScrollMousePos,
   toggleBox,
@@ -62,8 +63,13 @@ export const SelectionArea = ({
         onMouseDown(e);
       }
 
+      const rect = ref.current.getBoundingClientRect();
+
       // handle scrollbar
-      if (e.pageX + ref.current.scrollLeft >= ref.current.scrollWidth) {
+      if (
+        e.pageX + ref.current.scrollLeft - rect.left >=
+        ref.current.scrollWidth
+      ) {
         return;
       }
 
@@ -142,24 +148,6 @@ export const SelectionArea = ({
     provider.registry.getSelected();
   }, []);
 
-  const _style = React.useMemo<CSSProperties>(() => {
-    return {
-      position: 'relative',
-      ...style,
-    };
-  }, [style]);
-
-  const _boxStyle = React.useMemo<CSSProperties>(() => {
-    return {
-      position: 'absolute',
-      boxSizing: 'border-box',
-      backgroundColor: 'rgba(0, 0, 0, 0.08)',
-      border: '1px solid rgba(0, 0, 0, 0.12)',
-      display: 'none',
-      ...boxStyle,
-    };
-  }, [boxStyle]);
-
   useLayoutEffect(() => {
     return () => {
       onMouseUp();
@@ -170,14 +158,14 @@ export const SelectionArea = ({
     <div
       ref={ref}
       {...props}
-      style={_style}
       onMouseDown={_onMouseDown}
       onScroll={_onScroll}
+      style={{ position: 'relative', ...style }}
     >
       <SelectionContext.Provider value={provider}>
         {children}
       </SelectionContext.Provider>
-      <div ref={boxRef} style={_boxStyle} />
+      <Box ref={boxRef} style={boxStyle} />
     </div>
   );
 };
