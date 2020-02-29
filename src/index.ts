@@ -1,4 +1,9 @@
 export { SelectionArea } from './components/SelectionArea';
 export { Selectable } from './components/Selectable';
-export { cursorDistance, getScrollMousePos, getRelPos } from './utils';
+export {
+  cursorDistance,
+  getScrollMousePos,
+  getRelPos,
+  useWindowEvent,
+} from './utils';
 export { IPos } from './interfaces';

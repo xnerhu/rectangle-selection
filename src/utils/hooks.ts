@@ -1,12 +1,6 @@
-import {
-  useEffect,
-  DependencyList,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-} from 'react';
+import { useEffect, DependencyList, useCallback, useRef } from 'react';
 
-type IWindowEvent = 'mousemove' | 'mouseup';
+type IWindowEvent = 'mousemove' | 'mouseup' | 'mousedown';
 
 type ICallback = (...args: any[]) => any;
 
