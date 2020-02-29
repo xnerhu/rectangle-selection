@@ -21,5 +21,7 @@ module.exports = {
     'react/display-name': 'off',
     'react/jsx-no-target-blank': 'off',
     'react/no-unescaped-entities': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };

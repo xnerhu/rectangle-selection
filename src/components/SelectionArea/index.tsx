@@ -5,6 +5,8 @@ import React, {
   CSSProperties,
   ReactNode,
   useLayoutEffect,
+  useState,
+  useEffect,
 } from 'react';
 
 import { IPos, IContext, IOnSelection } from '~/interfaces';
@@ -16,6 +18,7 @@ import {
   isBoxVisible,
   updateBoxRect,
   isScrollbar,
+  useWindowEvent,
 } from '~/utils';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -37,7 +40,9 @@ export const SelectionArea = ({
   children,
   ...props
 }: Props) => {
-  const active = React.useRef(false);
+  const [state, setState] = useState(false);
+
+  const active = useRef(false);
 
   const ref = useRef<HTMLDivElement>();
   const boxRef = useRef<HTMLDivElement>();
@@ -53,48 +58,56 @@ export const SelectionArea = ({
     [],
   );
 
-  React.useEffect(() => {
-    provider.registry.onSelection = onSelection;
-    provider.registry.options.fast = fast;
-  }, [onSelection, fast]);
+  const clear = React.useCallback(() => {
+    active.current = false;
+    boxVisible.current = false;
+    startPos.current = null;
+    mousePos.current = null;
 
-  const _onMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (onMouseDown) onMouseDown(e);
+    toggleBox(boxRef.current);
+  }, []);
 
-      if (!active.current && e.button === 0 && !isScrollbar(ref.current, e)) {
-        window.addEventListener('mousemove', onWindowMouseMove);
-        window.addEventListener('mouseup', onMouseUp);
+  const resize = useCallback(() => {
+    updateBoxRect(
+      ref.current,
+      boxRef.current,
+      mousePos.current,
+      startPos.current,
+    );
 
-        startPos.current = getScrollMousePos(e, ref.current);
-        active.current = true;
-      }
-    },
-    [fast],
-  );
+    provider.registry.getSelected();
+  }, []);
 
-  const onMouseUp = useCallback(() => {
-    if (active.current) {
-      window.removeEventListener('mousemove', onWindowMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+  const _onMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (onMouseDown) onMouseDown(e);
 
+    if (e.button === 0 && !isScrollbar(ref.current, e)) {
+      onWindowMouseUp.apply();
+      onWindowMouseMove.apply();
+
+      startPos.current = getScrollMousePos(e, ref.current);
+      active.current = true;
+    }
+  }, []);
+
+  const onWindowMouseUp = useWindowEvent(
+    'mouseup',
+    () => {
       if (fast) {
         provider.registry.getSelected(true);
       }
 
-      startPos.current = null;
-      mousePos.current = null;
-      boxVisible.current = false;
-      active.current = false;
+      clear();
 
-      toggleBox(boxRef.current);
-    }
-  }, [fast]);
+      onWindowMouseMove.remove();
+      onWindowMouseUp.remove();
+    },
+    [fast],
+  );
 
-  const onWindowMouseMove = useCallback(
+  const onWindowMouseMove = useWindowEvent(
+    'mousemove',
     (e: MouseEvent) => {
-      if (!active.current) return;
-
       mousePos.current = [e.pageX, e.pageY];
 
       if (!boxVisible.current) {
@@ -107,41 +120,25 @@ export const SelectionArea = ({
 
         if (visible) {
           boxVisible.current = true;
-
           toggleBox(boxRef.current, true);
         }
       }
 
       resize();
     },
-    [distance, fast],
+    [],
   );
 
   const _onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     if (onScroll) onScroll(e);
-
-    if (!active.current) return;
-    resize();
+    if (active.current) resize();
   }, []);
 
-  const resize = useCallback(() => {
-    if (!active.current) return;
-
-    updateBoxRect(
-      ref.current,
-      boxRef.current,
-      mousePos.current,
-      startPos.current,
-    );
-
-    provider.registry.getSelected();
-  }, []);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     return () => {
-      onMouseUp();
+      clear();
     };
-  }, [fast]);
+  }, []);
 
   return (
     <div
