@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-  useEffect,
-} from 'react';
+import React, { useContext, useRef, useCallback, useEffect } from 'react';
 
 import { SelectionContext } from '~/models';
 

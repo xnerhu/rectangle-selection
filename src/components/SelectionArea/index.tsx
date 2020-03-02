@@ -23,6 +23,8 @@ import {
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   onSelection?: IOnSelection;
+  onSelectionStart?: () => void;
+  onSelectionEnd?: () => void;
   distance?: number;
   boxStyle?: CSSProperties;
   children?: ReactNode;
@@ -32,6 +34,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export const SelectionArea = ({
   distance,
   onSelection,
+  onSelectionStart,
+  onSelectionEnd,
   boxStyle,
   fast,
   style,
@@ -57,13 +61,17 @@ export const SelectionArea = ({
   );
 
   const clear = React.useCallback(() => {
+    if (boxVisible.current && onSelectionEnd) {
+      onSelectionEnd();
+    }
+
     active.current = false;
     boxVisible.current = false;
     startPos.current = null;
     mousePos.current = null;
 
     toggleBox(boxRef.current);
-  }, []);
+  }, [onSelectionEnd]);
 
   const resize = useCallback(() => {
     updateBoxRect(
@@ -100,7 +108,7 @@ export const SelectionArea = ({
       onWindowMouseMove.remove();
       onWindowMouseUp.remove();
     },
-    [fast],
+    [fast, clear],
   );
 
   const onWindowMouseMove = useWindowEvent(
@@ -118,13 +126,18 @@ export const SelectionArea = ({
 
         if (visible) {
           boxVisible.current = true;
+
           toggleBox(boxRef.current, true);
+
+          if (onSelectionStart) {
+            onSelectionStart();
+          }
         }
       }
 
       resize();
     },
-    [],
+    [onSelectionStart],
   );
 
   const _onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -133,7 +146,6 @@ export const SelectionArea = ({
   }, []);
 
   useEffect(() => {
-    console.log('x');
     provider.registry.onSelection = onSelection;
     provider.registry.options = { fast };
   }, [onSelection, fast]);
