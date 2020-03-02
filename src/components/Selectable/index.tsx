@@ -15,7 +15,7 @@ interface Props {
 
 let _id = 0;
 
-export const Selectable = (props: Props) => {
+export const Selectable = ({ data, children }: Props) => {
   const { registry } = useContext(SelectionContext);
 
   const ref = useRef<HTMLDivElement>();
@@ -28,14 +28,14 @@ export const Selectable = (props: Props) => {
   useEffect(() => {
     registry.register({
       id: id.current,
-      data: props.data,
+      data,
       ref,
     });
 
     return () => {
       registry.unregister(id.current);
     };
-  }, [registry, props]);
+  }, [registry, data]);
 
-  return props.children(setRef);
+  return children(setRef);
 };

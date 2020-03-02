@@ -4,17 +4,15 @@ import { elementsCollide } from '~/utils';
 export class Registry {
   public map = new Map<number, IRegistryItem>();
 
-  protected worker: Worker;
+  public onSelection: IOnSelection;
+
+  public options: IRegisterOptions = {};
 
   protected selectedLength: number;
 
   protected timeout: NodeJS.Timeout;
 
-  constructor(
-    public boxRef: React.RefObject<HTMLDivElement>,
-    public onSelection: IOnSelection,
-    public options: IRegisterOptions = {},
-  ) {}
+  constructor(public boxRef: React.RefObject<HTMLDivElement>) {}
 
   public register(item: IRegistryItem) {
     this.map.set(item.id, item);

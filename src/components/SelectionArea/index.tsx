@@ -40,8 +40,6 @@ export const SelectionArea = ({
   children,
   ...props
 }: Props) => {
-  const [state, setState] = useState(false);
-
   const active = useRef(false);
 
   const ref = useRef<HTMLDivElement>();
@@ -53,7 +51,7 @@ export const SelectionArea = ({
 
   const provider = useMemo<IContext>(
     () => ({
-      registry: new Registry(boxRef, onSelection),
+      registry: new Registry(boxRef),
     }),
     [],
   );
@@ -133,6 +131,12 @@ export const SelectionArea = ({
     if (onScroll) onScroll(e);
     if (active.current) resize();
   }, []);
+
+  useEffect(() => {
+    console.log('x');
+    provider.registry.onSelection = onSelection;
+    provider.registry.options = { fast };
+  }, [onSelection, fast]);
 
   useEffect(() => {
     return () => {
