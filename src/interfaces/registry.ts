@@ -3,7 +3,3 @@ export interface IRegistryItem {
   id: number;
   data?: any;
 }
-
-export interface IRegisterOptions {
-  fast?: boolean;
-}

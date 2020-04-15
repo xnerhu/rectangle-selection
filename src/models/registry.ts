@@ -1,14 +1,12 @@
 import { createContext } from 'react';
 
-import { IRegistryItem, IRegisterOptions } from '~/interfaces';
+import { IRegistryItem } from '~/interfaces';
 import { elementsCollide } from '~/utils/dom';
 
 export class Registry {
   public map = new Map<number, IRegistryItem>();
 
-  public options: IRegisterOptions = {};
-
-  protected selectedLength: number;
+  private selectedLength: number;
 
   constructor(public boxRef: React.RefObject<HTMLDivElement>) {}
 
