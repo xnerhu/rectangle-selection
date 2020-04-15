@@ -1,13 +1,6 @@
-// export { SelectionArea } from './components/SelectionArea';
-// export { Selectable } from './components/Selectable';
-// export {
-//   cursorDistance,
-//   getScrollMousePos,
-//   getRelPos,
-//   useWindowEvent,
-// } from './utils';
-// export { IPos } from './interfaces';
-
 export { SelectionContext } from './components/SelectionContext';
 export { Selectable } from './components/Selectable';
 export { useSelectable } from './hooks/selectable';
+export { IPos } from './interfaces';
+export { cursorDistance } from './utils/cursor';
+export { getScrollMousePos, getRelPos } from './utils/pos';
