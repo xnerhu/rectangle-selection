@@ -37,6 +37,15 @@ export class SelectionContext extends PureComponent<Props, {}> {
   private active = false;
   private boxVisible = false;
 
+  public componentWillUnmount() {
+    this.removeListeners();
+  }
+
+  private removeListeners() {
+    window.removeEventListener('mouseup', this.hide);
+    window.removeEventListener('mousemove', this.onWindowMouseMove);
+  }
+
   private resize() {
     const { onSelection } = this.props;
 
@@ -67,9 +76,7 @@ export class SelectionContext extends PureComponent<Props, {}> {
     this.boxVisible = false;
 
     toggleBox(this.boxRef.current);
-
-    window.removeEventListener('mouseup', this.hide);
-    window.removeEventListener('mousemove', this.onWindowMouseMove);
+    this.removeListeners();
   };
 
   private onWindowMouseMove = (e: MouseEvent) => {
