@@ -1,5 +1,5 @@
 export interface IRegistryItem {
-  ref: React.RefObject<HTMLDivElement>;
+  ref: HTMLElement;
   id: number;
   data?: any;
 }
