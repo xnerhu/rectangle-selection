@@ -9,4 +9,5 @@
 // export { IPos } from './interfaces';
 
 export { SelectionContext } from './components/SelectionContext';
+export { Selectable } from './components/Selectable';
 export { useSelectable } from './hooks/selectable';

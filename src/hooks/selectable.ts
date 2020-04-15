@@ -10,7 +10,7 @@ export const useSelectable = (data: any) => {
   const id = useRef(_id++);
 
   const setRef = useCallback(
-    (ref: HTMLDivElement) => {
+    (ref: HTMLElement) => {
       registry.register({
         id: id.current,
         data,
