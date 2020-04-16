@@ -1,3 +1,3 @@
 import { Registry } from '~/models/registry';
 
-export default {} as { registry?: Registry };
+export default {} as { currentRegistry?: Registry };
