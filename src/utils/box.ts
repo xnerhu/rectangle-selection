@@ -1,22 +1,26 @@
-import { IPos } from '~/interfaces';
+import { IPosition } from 'spatium';
 
-import { cursorDistance } from './cursor';
-import { getRelPos } from './pos';
+const limitSize = (size: number, parentSize: number, offset: number) => {
+  return Math.min(size, parentSize - offset);
+};
 
-export const getBoxSize = ([mouseX, mouseY]: IPos, [startX, startY]: IPos) => {
+const getBoxSize = (
+  [mouseX, mouseY]: IPosition,
+  [startX, startY]: IPosition,
+) => {
   const width = Math.abs(mouseX - startX);
   const height = Math.abs(mouseY - startY);
 
   return [width, height];
 };
 
-export const getBoxPos = (
+const getBoxPos = (
   ref: HTMLElement,
-  [mouseX, mouseY]: IPos,
-  [startX, startY]: IPos,
+  [mouseX, mouseY]: IPosition,
+  [startX, startY]: IPosition,
   width: number,
   height: number,
-): IPos => {
+): IPosition => {
   const rect = ref.getBoundingClientRect();
 
   const x = mouseX < startX ? startX - width : startX;
@@ -25,42 +29,14 @@ export const getBoxPos = (
   return [x - rect.left, y - rect.top];
 };
 
-export const toggleBox = (ref: HTMLElement, visible = false) => {
-  Object.assign(ref.style, {
-    display: visible ? 'block' : 'none',
-  });
-};
-
-export const isBoxVisible = (
-  rawMousePos: IPos,
-  startPos: IPos,
-  ref: HTMLElement,
-  minDistance: number,
-) => {
-  if (!rawMousePos || !startPos) return false;
-
-  const relMousePos = getRelPos(rawMousePos, ref);
-  const distance = cursorDistance(startPos, relMousePos);
-
-  return distance >= minDistance;
-};
-
-const limitSize = (size: number, parentSize: number, offset: number) => {
-  return Math.min(size, parentSize - offset);
-};
-
 export const updateBoxRect = (
   ref: HTMLElement,
   boxRef: HTMLElement,
-  rawMousePos: IPos,
-  startPos: IPos,
+  currentPos: IPosition,
+  startPos: IPosition,
 ) => {
-  if (!rawMousePos || !startPos) return;
-
-  const mousePos = getRelPos(rawMousePos, ref);
-
-  const [width, height] = getBoxSize(mousePos, startPos);
-  const [x, y] = getBoxPos(ref, mousePos, startPos, width, height);
+  const [width, height] = getBoxSize(currentPos, startPos);
+  const [x, y] = getBoxPos(ref, currentPos, startPos, width, height);
 
   Object.assign(boxRef.style, {
     width: `${limitSize(width, ref.scrollWidth, x)}px`,

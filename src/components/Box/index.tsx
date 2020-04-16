@@ -9,7 +9,10 @@ const style: CSSProperties = {
 };
 
 export const Box = forwardRef(
-  (props: React.HTMLAttributes<HTMLDivElement>, ref: React.Ref<any>) => {
+  (
+    props: React.HTMLAttributes<HTMLDivElement>,
+    ref: React.Ref<HTMLDivElement>,
+  ) => {
     return <div ref={ref} style={{ ...style, ...props.style }} />;
   },
 );

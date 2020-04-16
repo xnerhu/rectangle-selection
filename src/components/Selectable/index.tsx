@@ -1,35 +1,14 @@
-import React, { useContext, useRef, useCallback, useEffect } from 'react';
+import { useSelectable } from '~/hooks/selectable';
 
-import { SelectionContext } from '~/models';
+type SetRef = (ref: HTMLElement) => void;
 
 interface Props {
   data: any;
-  children?: (ref: React.Ref<any>) => JSX.Element;
+  children?: (setRef: SetRef) => JSX.Element;
 }
 
-let _id = 0;
-
 export const Selectable = ({ data, children }: Props) => {
-  const { registry } = useContext(SelectionContext);
-
-  const ref = useRef<HTMLDivElement>();
-  const id = useRef(_id++);
-
-  const setRef = useCallback((el: any) => {
-    ref.current = el;
-  }, []);
-
-  useEffect(() => {
-    registry.register({
-      id: id.current,
-      data,
-      ref,
-    });
-
-    return () => {
-      registry.unregister(id.current);
-    };
-  }, [registry, data]);
+  const [setRef] = useSelectable(data);
 
   return children(setRef);
 };

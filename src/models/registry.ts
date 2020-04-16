@@ -1,16 +1,12 @@
-import { IRegistryItem, IOnSelection, IRegisterOptions } from '~/interfaces';
-import { elementsCollide } from '~/utils';
+import { createContext } from 'react';
+
+import { IRegistryItem } from '~/interfaces';
+import { elementsCollide } from '~/utils/pos';
 
 export class Registry {
   public map = new Map<number, IRegistryItem>();
 
-  public onSelection: IOnSelection;
-
-  public options: IRegisterOptions = {};
-
-  protected selectedLength: number;
-
-  protected timeout: NodeJS.Timeout;
+  private selectedLength: number;
 
   constructor(public boxRef: React.RefObject<HTMLDivElement>) {}
 
@@ -22,38 +18,25 @@ export class Registry {
     this.map.delete(id);
   }
 
-  protected search = () => {
+  public getSelected = () => {
     const boxRect = this.boxRef.current.getBoundingClientRect();
     const selected: any[] = [];
 
     this.map.forEach((r: IRegistryItem) => {
-      const collides = elementsCollide(
-        r.ref.current.getBoundingClientRect(),
-        boxRect,
-      );
+      const collides = elementsCollide(r.ref.getBoundingClientRect(), boxRect);
 
       if (collides) {
         selected.push(r.data);
       }
     });
 
-    if (selected.length !== this.selectedLength && this.onSelection) {
-      this.onSelection(selected);
+    if (selected.length !== this.selectedLength) {
       this.selectedLength = selected.length;
+      return selected;
     }
+
+    return null;
   };
-
-  public getSelected(force?: boolean) {
-    const { fast } = this.options;
-
-    if (fast || force) {
-      clearTimeout(this.timeout);
-    }
-
-    if (this.options.fast && !force) {
-      this.timeout = setTimeout(this.search, 1);
-    } else {
-      this.search();
-    }
-  }
 }
+
+export const RegistryContext = createContext<Registry>(null);

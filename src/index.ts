@@ -1,9 +1,7 @@
-export { SelectionArea } from './components/SelectionArea';
+export { IRegistryItem } from './interfaces';
+
+export { SelectionContext } from './components/SelectionContext';
 export { Selectable } from './components/Selectable';
-export {
-  cursorDistance,
-  getScrollMousePos,
-  getRelPos,
-  useWindowEvent,
-} from './utils';
-export { IPos } from './interfaces';
+
+export { useSelectable } from './hooks/selectable';
+export { getRegistryItems } from './utils/registry';
