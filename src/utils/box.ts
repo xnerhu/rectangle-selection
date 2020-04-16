@@ -32,15 +32,11 @@ export const toggleBox = (ref: HTMLElement, visible = false) => {
 };
 
 export const isBoxVisible = (
-  rawMousePos: IPos,
-  startPos: IPos,
-  ref: HTMLElement,
+  current: IPos,
+  start: IPos,
   minDistance: number,
 ) => {
-  if (!rawMousePos || !startPos) return false;
-
-  const relMousePos = getRelPos(rawMousePos, ref);
-  const distance = cursorDistance(startPos, relMousePos);
+  const distance = cursorDistance(start, current);
 
   return distance >= minDistance;
 };
@@ -52,15 +48,11 @@ const limitSize = (size: number, parentSize: number, offset: number) => {
 export const updateBoxRect = (
   ref: HTMLElement,
   boxRef: HTMLElement,
-  rawMousePos: IPos,
+  currentPos: IPos,
   startPos: IPos,
 ) => {
-  if (!rawMousePos || !startPos) return;
-
-  const mousePos = getRelPos(rawMousePos, ref);
-
-  const [width, height] = getBoxSize(mousePos, startPos);
-  const [x, y] = getBoxPos(ref, mousePos, startPos, width, height);
+  const [width, height] = getBoxSize(currentPos, startPos);
+  const [x, y] = getBoxPos(ref, currentPos, startPos, width, height);
 
   Object.assign(boxRef.style, {
     width: `${limitSize(width, ref.scrollWidth, x)}px`,

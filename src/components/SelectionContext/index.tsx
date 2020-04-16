@@ -31,8 +31,8 @@ export class SelectionContext extends PureComponent<Props, {}> {
 
   private registry = new Registry(this.boxRef);
 
-  private startMousePos: IPos;
-  private currentMousePos: IPos;
+  private startPos: IPos;
+  private currentPos: IPos;
 
   private active = false;
   private boxVisible = false;
@@ -46,14 +46,21 @@ export class SelectionContext extends PureComponent<Props, {}> {
     window.removeEventListener('mousemove', this.onWindowMouseMove);
   }
 
+  private get currentRelPos(): IPos {
+    const ref = this.ref.current;
+    const [x, y] = this.currentPos;
+
+    return [x + ref.scrollLeft, y + ref.scrollTop];
+  }
+
   private resize() {
     const { onSelection } = this.props;
 
     updateBoxRect(
       this.ref.current,
       this.boxRef.current,
-      this.startMousePos,
-      this.currentMousePos,
+      this.currentRelPos,
+      this.startPos,
     );
 
     if (onSelection && this.boxVisible) {
@@ -82,15 +89,10 @@ export class SelectionContext extends PureComponent<Props, {}> {
   private onWindowMouseMove = (e: MouseEvent) => {
     const { distance, onSelectionStart } = this.props;
 
-    this.currentMousePos = [e.pageX, e.pageY];
+    this.currentPos = [e.pageX, e.pageY];
 
     if (!this.boxVisible) {
-      const visible = isBoxVisible(
-        this.currentMousePos,
-        this.startMousePos,
-        this.ref.current,
-        distance,
-      );
+      const visible = isBoxVisible(this.currentRelPos, this.startPos, distance);
 
       if (visible) {
         this.boxVisible = true;
@@ -101,9 +103,9 @@ export class SelectionContext extends PureComponent<Props, {}> {
           onSelectionStart();
         }
       }
+    } else {
+      this.resize();
     }
-
-    this.resize();
   };
 
   private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -117,7 +119,8 @@ export class SelectionContext extends PureComponent<Props, {}> {
       window.addEventListener('mouseup', this.hide);
       window.addEventListener('mousemove', this.onWindowMouseMove);
 
-      this.startMousePos = getScrollMousePos(e, this.ref.current);
+      this.startPos = getScrollMousePos(e, this.ref.current);
+      // console.log(this.startMousePos);
       this.active = true;
     }
   };
