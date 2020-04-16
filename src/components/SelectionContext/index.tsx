@@ -4,15 +4,14 @@ import React, {
   PureComponent,
   createRef,
 } from 'react';
+import cursorDistance, { IPosition } from 'spatium';
 
 import store from '~/store';
 import { updateBoxRect } from '~/utils/box';
-import { IPos } from '~/interfaces';
 import { isOnScrollbar } from '~/utils/pos';
 import { Registry } from '~/models/registry';
 import { RegistryContext } from '~/models/registry';
 import { Box } from '../Box';
-import { cursorDistance } from '~/utils/cursor';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   onSelection?: (items: any[]) => void;
@@ -33,8 +32,8 @@ export class SelectionContext extends PureComponent<Props, {}> {
 
   private registry = new Registry(this.boxRef);
 
-  private startPos: IPos;
-  private currentPos: IPos;
+  private startPos: IPosition;
+  private currentPos: IPosition;
 
   private active = false;
   private boxVisible = false;
@@ -48,7 +47,7 @@ export class SelectionContext extends PureComponent<Props, {}> {
     window.removeEventListener('mousemove', this.onWindowMouseMove);
   }
 
-  private get currentRelPos(): IPos {
+  private get currentRelPos(): IPosition {
     const ref = this.ref.current;
     const [x, y] = this.currentPos;
 

@@ -1,10 +1,13 @@
-import { IPos } from '~/interfaces';
+import { IPosition } from 'spatium';
 
 const limitSize = (size: number, parentSize: number, offset: number) => {
   return Math.min(size, parentSize - offset);
 };
 
-const getBoxSize = ([mouseX, mouseY]: IPos, [startX, startY]: IPos) => {
+const getBoxSize = (
+  [mouseX, mouseY]: IPosition,
+  [startX, startY]: IPosition,
+) => {
   const width = Math.abs(mouseX - startX);
   const height = Math.abs(mouseY - startY);
 
@@ -13,11 +16,11 @@ const getBoxSize = ([mouseX, mouseY]: IPos, [startX, startY]: IPos) => {
 
 const getBoxPos = (
   ref: HTMLElement,
-  [mouseX, mouseY]: IPos,
-  [startX, startY]: IPos,
+  [mouseX, mouseY]: IPosition,
+  [startX, startY]: IPosition,
   width: number,
   height: number,
-): IPos => {
+): IPosition => {
   const rect = ref.getBoundingClientRect();
 
   const x = mouseX < startX ? startX - width : startX;
@@ -29,8 +32,8 @@ const getBoxPos = (
 export const updateBoxRect = (
   ref: HTMLElement,
   boxRef: HTMLElement,
-  currentPos: IPos,
-  startPos: IPos,
+  currentPos: IPosition,
+  startPos: IPosition,
 ) => {
   const [width, height] = getBoxSize(currentPos, startPos);
   const [x, y] = getBoxPos(ref, currentPos, startPos, width, height);
