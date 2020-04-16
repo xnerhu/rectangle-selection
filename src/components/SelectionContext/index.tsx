@@ -5,6 +5,7 @@ import React, {
   createRef,
 } from 'react';
 
+import store from '~/store';
 import { updateBoxRect } from '~/utils/box';
 import { IPos } from '~/interfaces';
 import { isOnScrollbar } from '~/utils/pos';
@@ -82,6 +83,7 @@ export class SelectionContext extends PureComponent<Props, {}> {
 
     this.active = false;
     this.boxVisible = false;
+    store.currentRegistry = null;
 
     this.toggleBox();
     this.removeListeners();
@@ -125,6 +127,7 @@ export class SelectionContext extends PureComponent<Props, {}> {
 
       this.startPos = [e.pageX + ref.scrollLeft, e.pageY + ref.scrollTop];
       this.active = true;
+      store.currentRegistry = this.registry;
     }
   };
 
