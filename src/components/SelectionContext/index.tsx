@@ -147,10 +147,10 @@ export class SelectionContext extends PureComponent<Props, {}> {
     return (
       <div
         ref={this.ref}
+        {...props}
         onMouseDown={this.onMouseDown}
         onScroll={this.onScroll}
         style={{ position: 'relative', ...style }}
-        {...props}
       >
         <RegistryContext.Provider value={this.registry}>
           {children}
