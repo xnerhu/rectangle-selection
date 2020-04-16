@@ -1,16 +1,17 @@
 import { IPos } from '~/interfaces';
 
-import { cursorDistance } from './cursor';
-import { getRelPos } from './pos';
+const limitSize = (size: number, parentSize: number, offset: number) => {
+  return Math.min(size, parentSize - offset);
+};
 
-export const getBoxSize = ([mouseX, mouseY]: IPos, [startX, startY]: IPos) => {
+const getBoxSize = ([mouseX, mouseY]: IPos, [startX, startY]: IPos) => {
   const width = Math.abs(mouseX - startX);
   const height = Math.abs(mouseY - startY);
 
   return [width, height];
 };
 
-export const getBoxPos = (
+const getBoxPos = (
   ref: HTMLElement,
   [mouseX, mouseY]: IPos,
   [startX, startY]: IPos,
@@ -23,26 +24,6 @@ export const getBoxPos = (
   const y = mouseY < startY ? startY - height : startY;
 
   return [x - rect.left, y - rect.top];
-};
-
-export const toggleBox = (ref: HTMLElement, visible = false) => {
-  Object.assign(ref.style, {
-    display: visible ? 'block' : 'none',
-  });
-};
-
-export const isBoxVisible = (
-  current: IPos,
-  start: IPos,
-  minDistance: number,
-) => {
-  const distance = cursorDistance(start, current);
-
-  return distance >= minDistance;
-};
-
-const limitSize = (size: number, parentSize: number, offset: number) => {
-  return Math.min(size, parentSize - offset);
 };
 
 export const updateBoxRect = (

@@ -5,12 +5,13 @@ import React, {
   createRef,
 } from 'react';
 
-import { updateBoxRect, toggleBox, isBoxVisible } from '~/utils/box';
+import { updateBoxRect } from '~/utils/box';
 import { IPos } from '~/interfaces';
-import { isScrollbar, getScrollMousePos } from '~/utils/pos';
+import { isOnScrollbar } from '~/utils/pos';
 import { Registry } from '~/models/registry';
 import { RegistryContext } from '~/models/registry';
 import { Box } from '../Box';
+import { cursorDistance } from '~/utils/cursor';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   onSelection?: (items: any[]) => void;
@@ -82,7 +83,7 @@ export class SelectionContext extends PureComponent<Props, {}> {
     this.active = false;
     this.boxVisible = false;
 
-    toggleBox(this.boxRef.current);
+    this.toggleBox();
     this.removeListeners();
   };
 
@@ -91,36 +92,37 @@ export class SelectionContext extends PureComponent<Props, {}> {
 
     this.currentPos = [e.pageX, e.pageY];
 
-    if (!this.boxVisible) {
-      const visible = isBoxVisible(this.currentRelPos, this.startPos, distance);
+    if (this.boxVisible) {
+      return this.resize();
+    }
 
-      if (visible) {
-        this.boxVisible = true;
+    const visible =
+      cursorDistance(this.startPos, this.currentRelPos) >= distance;
 
-        toggleBox(this.boxRef.current, true);
-
-        if (onSelectionStart) {
-          onSelectionStart();
-        }
-      }
-    } else {
+    if (visible) {
+      this.boxVisible = true;
+      this.toggleBox(true);
       this.resize();
+
+      if (onSelectionStart) {
+        onSelectionStart();
+      }
     }
   };
 
   private onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const { onMouseDown } = this.props;
+    const ref = this.ref.current;
 
     if (onMouseDown) {
       onMouseDown(e);
     }
 
-    if (e.button === 0 && !isScrollbar(this.ref.current, e)) {
+    if (e.button === 0 && !isOnScrollbar(e, ref)) {
       window.addEventListener('mouseup', this.hide);
       window.addEventListener('mousemove', this.onWindowMouseMove);
 
-      this.startPos = getScrollMousePos(e, this.ref.current);
-      // console.log(this.startMousePos);
+      this.startPos = [e.pageX + ref.scrollLeft, e.pageY + ref.scrollTop];
       this.active = true;
     }
   };
@@ -128,14 +130,13 @@ export class SelectionContext extends PureComponent<Props, {}> {
   private onScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { onScroll } = this.props;
 
-    if (onScroll) {
-      onScroll(e);
-    }
-
-    if (this.active) {
-      this.resize();
-    }
+    if (onScroll) onScroll(e);
+    if (this.active) this.resize();
   };
+
+  private toggleBox(visible?: boolean) {
+    this.boxRef.current.style.display = visible ? 'block' : 'none';
+  }
 
   render() {
     const { distance, style, children, onSelection, ...props } = this.props;

@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
 import { IRegistryItem } from '~/interfaces';
-import { elementsCollide } from '~/utils/dom';
+import { elementsCollide } from '~/utils/pos';
 
 export class Registry {
   public map = new Map<number, IRegistryItem>();

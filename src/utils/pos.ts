@@ -1,23 +1,18 @@
 import React from 'react';
 
-import { IPos } from '~/interfaces';
-
-export const getScrollMousePos = (
-  e: MouseEvent | React.MouseEvent,
-  ref: HTMLElement,
-): IPos => {
-  return [e.pageX + ref.scrollLeft, e.pageY + ref.scrollTop];
-};
-
-export const getRelPos = (pos: IPos, ref: HTMLElement): IPos => {
-  return [pos[0] + ref.scrollLeft, pos[1] + ref.scrollTop];
-};
-
-export const isScrollbar = (
-  ref: HTMLElement,
+export const isOnScrollbar = (
   e: React.MouseEvent | MouseEvent,
+  ref: HTMLElement,
 ) => {
   const rect = ref.getBoundingClientRect();
-
   return e.pageX + ref.scrollLeft - rect.left >= ref.scrollWidth;
+};
+
+export const elementsCollide = (first: DOMRect, second: DOMRect) => {
+  return !(
+    first.right < second.left ||
+    first.left > second.right ||
+    first.bottom < second.top ||
+    first.top > second.bottom
+  );
 };
