@@ -119,6 +119,7 @@ export class SelectionContext extends PureComponent<Props, {}> {
     }
 
     if (e.button === 0 && !isOnScrollbar(e, ref)) {
+      this.removeListeners();
       window.addEventListener('mouseup', this.hide);
       window.addEventListener('mousemove', this.onWindowMouseMove);
 
